@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f6f2">
+  <title>Buba — Good things, found here</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #20251f;
+      --muted: #777d73;
+      --paper: #f7f6f2;
+      --white: #fff;
+      --green: #315c43;
+      --green-dark: #244733;
+      --line: #e8e7e0;
+      --serif: Georgia, "Times New Roman", serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: var(--paper); }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    a { color: inherit; text-decoration: none; }
+
+    .announcement {
+      padding: 9px 20px;
+      color: #f7f6f2;
+      background: var(--green);
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: .04em;
+    }
+    .site-header {
+      position: sticky;
+      z-index: 5;
+      top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 19px max(5vw, 24px);
+      background: rgb(247 246 242 / 94%);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(12px);
+    }
+    .brand { font-family: var(--serif); font-size: 30px; font-weight: 700; letter-spacing: -.07em; }
+    .main-nav { display: flex; align-items: center; gap: 30px; color: #555c53; font-size: 13px; }
+    .main-nav a:hover { color: var(--green); }
+    .header-actions { display: flex; align-items: center; gap: 12px; }
+    .icon-button, .sell-button, .primary-button, .quiet-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 999px;
+      transition: transform .18s ease, background .18s ease;
+    }
+    .icon-button:hover, .sell-button:hover, .primary-button:hover, .quiet-button:hover { transform: translateY(-1px); }
+    .icon-button { gap: 8px; min-height: 42px; padding: 0 15px; color: var(--ink); background: var(--white); }
+    .cart-count { display: grid; width: 20px; height: 20px; place-items: center; color: white; background: var(--green); border-radius: 50%; font-size: 11px; }
+    .sell-button { min-height: 42px; padding: 0 19px; color: white; background: var(--green); font-size: 13px; font-weight: 600; }
+    .sell-button:hover, .primary-button:hover { background: var(--green-dark); }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      min-height: 430px;
+      place-items: center;
+      padding: 68px 24px 74px;
+      color: white;
+      background:
+        radial-gradient(ellipse at 78% 26%, rgb(214 194 142 / 48%), transparent 26%),
+        radial-gradient(ellipse at 88% 90%, rgb(178 194 155 / 60%), transparent 38%),
+        linear-gradient(115deg, #294737 0%, #526c4f 48%, #9b9b70 100%);
+      text-align: center;
+    }
+    .hero::before, .hero::after {
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      content: "";
+      border: 1px solid rgb(255 255 255 / 20%);
+      border-radius: 50%;
+    }
+    .hero::before { top: -205px; left: -70px; }
+    .hero::after { right: -170px; bottom: -240px; width: 510px; height: 510px; }
+    .hero-content { position: relative; z-index: 1; max-width: 690px; }
+    .eyebrow { margin: 0 0 18px; font-size: 11px; font-weight: 700; letter-spacing: .19em; text-transform: uppercase; }
+    .hero h1 { margin: 0; font-family: var(--serif); font-size: clamp(46px, 7vw, 76px); font-weight: 400; letter-spacing: -.055em; line-height: .98; }
+    .hero p:not(.eyebrow) { max-width: 450px; margin: 20px auto 27px; color: rgb(255 255 255 / 83%); font-size: 15px; line-height: 1.7; }
+    .hero-link { display: inline-flex; align-items: center; gap: 10px; padding: 13px 20px; color: var(--ink); background: white; border-radius: 999px; font-size: 13px; font-weight: 600; }
+    .hero-link:hover { background: #f1eee5; }
+
+    main { max-width: 1240px; margin: 0 auto; padding: 62px 30px 90px; }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 25px; }
+    .section-heading h2 { margin: 0; font-family: var(--serif); font-size: clamp(30px, 4vw, 42px); font-weight: 400; letter-spacing: -.04em; }
+    .section-heading p { margin: 8px 0 0; color: var(--muted); font-size: 13px; }
+    .shop-tools { display: flex; align-items: center; gap: 10px; }
+    .search-wrap { position: relative; }
+    .search-wrap span { position: absolute; top: 50%; left: 14px; color: #81867e; transform: translateY(-50%); }
+    .search-input { width: min(240px, 35vw); height: 42px; padding: 0 14px 0 38px; border: 1px solid var(--line); border-radius: 999px; outline: none; background: white; font-size: 12px; }
+    .search-input:focus { border-color: #9aab9a; }
+    .category-list { display: flex; gap: 8px; overflow-x: auto; margin: 0 0 24px; padding: 2px 0 8px; scrollbar-width: none; }
+    .category-list::-webkit-scrollbar { display: none; }
+    .category-button { flex: 0 0 auto; padding: 9px 15px; color: #5e655c; border: 1px solid var(--line); border-radius: 999px; background: transparent; font-size: 12px; }
+    .category-button.active, .category-button:hover { color: white; border-color: var(--green); background: var(--green); }
+    .product-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px 17px; }
+    .product-card { min-width: 0; }
+    .product-art {
+      position: relative;
+      display: grid;
+      overflow: hidden;
+      aspect-ratio: 4 / 4.6;
+      place-items: center;
+      border-radius: 5px;
+      background: var(--art-bg, #e7e4da);
+    }
+    .product-art::after { position: absolute; inset: 0; content: ""; background: linear-gradient(145deg, rgb(255 255 255 / 17%), transparent 56%); pointer-events: none; }
+    .product-emoji { display: block; font-size: clamp(58px, 8vw, 92px); filter: drop-shadow(0 12px 12px rgb(0 0 0 / 12%)); transition: transform .25s ease; }
+    .product-card:hover .product-emoji { transform: scale(1.07) rotate(-3deg); }
+    .product-badge { position: absolute; z-index: 1; top: 12px; left: 12px; padding: 6px 9px; color: #465145; background: rgb(255 255 255 / 87%); border-radius: 3px; font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .add-button { position: absolute; z-index: 2; right: 12px; bottom: 12px; display: grid; width: 39px; height: 39px; place-items: center; color: var(--ink); border: 0; border-radius: 50%; background: white; box-shadow: 0 3px 12px rgb(0 0 0 / 10%); font-size: 22px; transition: transform .18s ease, color .18s ease, background .18s ease; }
+    .add-button:hover { color: white; background: var(--green); transform: scale(1.06); }
+    .product-info { display: flex; justify-content: space-between; gap: 10px; padding: 12px 1px 0; }
+    .product-name { margin: 0; font-size: 13px; font-weight: 600; }
+    .product-seller { margin: 5px 0 0; color: var(--muted); font-size: 11px; }
+    .product-price { flex: 0 0 auto; font-size: 13px; font-weight: 600; }
+    .empty-state { grid-column: 1 / -1; padding: 55px 20px; color: var(--muted); border: 1px dashed #d7d8cf; border-radius: 5px; text-align: center; font-size: 14px; }
+
+    .story {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      margin-top: 86px;
+      border-radius: 5px;
+      background: #eae9df;
+    }
+    .story-art { display: grid; min-height: 300px; place-items: center; background: linear-gradient(140deg, #d7c59f, #aab4a0); }
+    .story-art span { font-size: 110px; filter: drop-shadow(0 12px 16px rgb(0 0 0 / 12%)); }
+    .story-copy { align-self: center; padding: 40px clamp(28px, 6vw, 76px); }
+    .story-copy .eyebrow { color: var(--green); }
+    .story-copy h2 { margin: 0; font-family: var(--serif); font-size: clamp(29px, 4vw, 43px); font-weight: 400; letter-spacing: -.04em; line-height: 1.1; }
+    .story-copy p:not(.eyebrow) { max-width: 390px; margin: 16px 0 23px; color: #64695f; font-size: 13px; line-height: 1.8; }
+    .text-link { display: inline-flex; gap: 8px; align-items: center; color: var(--green); font-size: 12px; font-weight: 700; }
+
+    footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 26px max(5vw, 24px); color: #777d73; border-top: 1px solid var(--line); font-size: 11px; }
+    footer .brand { color: var(--ink); font-size: 24px; }
+
+    .overlay { position: fixed; z-index: 10; inset: 0; visibility: hidden; background: rgb(23 29 24 / 42%); opacity: 0; transition: opacity .2s ease, visibility .2s ease; }
+    .overlay.open { visibility: visible; opacity: 1; }
+    .drawer { position: absolute; top: 0; right: 0; display: flex; flex-direction: column; width: min(430px, 100%); height: 100%; padding: 27px; background: var(--paper); transform: translateX(100%); transition: transform .25s ease; }
+    .overlay.open .drawer { transform: translateX(0); }
+    .drawer-heading { display: flex; align-items: center; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+    .drawer-heading h2 { margin: 0; font-family: var(--serif); font-size: 29px; font-weight: 400; }
+    .close-button { display: grid; width: 36px; height: 36px; place-items: center; color: var(--ink); border: 0; border-radius: 50%; background: #eeede7; font-size: 21px; }
+    .cart-items { flex: 1; overflow: auto; padding: 14px 0; }
+    .cart-empty { padding: 40px 0; color: var(--muted); text-align: center; font-size: 13px; }
+    .cart-item { display: grid; grid-template-columns: 58px 1fr auto; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+    .cart-item-art { display: grid; width: 58px; height: 64px; place-items: center; border-radius: 4px; background: var(--art-bg); font-size: 28px; }
+    .cart-item-name { margin: 0; font-size: 12px; font-weight: 600; }
+    .cart-item-price { margin: 5px 0 0; color: var(--muted); font-size: 11px; }
+    .quantity-control { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+    .quantity-control button { display: grid; width: 22px; height: 22px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: white; font-size: 13px; }
+    .quantity-control span { font-size: 11px; }
+    .cart-footer { padding-top: 16px; border-top: 1px solid var(--line); }
+    .subtotal { display: flex; justify-content: space-between; margin-bottom: 16px; font-size: 14px; font-weight: 600; }
+    .primary-button { width: 100%; min-height: 47px; color: white; background: var(--green); font-size: 13px; font-weight: 600; }
+    .cart-note { margin: 11px 0 0; color: var(--muted); text-align: center; font-size: 10px; }
+    .cart-toast { position: fixed; z-index: 20; right: 24px; bottom: 24px; max-width: min(380px, calc(100vw - 32px)); padding: 13px 17px; color: white; border-radius: 4px; background: var(--green-dark); box-shadow: 0 8px 24px rgb(0 0 0 / 18%); font-size: 12px; line-height: 1.5; opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity .18s ease, transform .18s ease; }
+    .cart-toast.visible { opacity: 1; transform: translateY(0); }
+    .quantity-control button:disabled { cursor: not-allowed; opacity: .45; }
+
+    .modal { position: fixed; z-index: 12; inset: 0; display: grid; visibility: hidden; place-items: center; padding: 20px; background: rgb(23 29 24 / 48%); opacity: 0; transition: opacity .2s ease, visibility .2s ease; }
+    .modal.open { visibility: visible; opacity: 1; }
+    .modal-card { width: min(450px, 100%); padding: 28px; border-radius: 7px; background: var(--paper); transform: translateY(10px); transition: transform .2s ease; }
+    .modal.open .modal-card { transform: translateY(0); }
+    .modal-top { display: flex; align-items: start; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+    .modal-top h2 { margin: 0; font-family: var(--serif); font-size: 29px; font-weight: 400; }
+    .modal-top p { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+    .form-field { display: grid; gap: 7px; margin-bottom: 14px; }
+    .form-field label { font-size: 11px; font-weight: 600; }
+    .form-field input, .form-field select { width: 100%; height: 42px; padding: 0 12px; color: var(--ink); border: 1px solid var(--line); border-radius: 4px; outline: none; background: white; font-size: 12px; }
+    .form-field input:focus, .form-field select:focus { border-color: #9aab9a; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-error { min-height: 16px; margin: 0 0 10px; color: #a53e34; font-size: 11px; }
+    .auth-card { max-height: min(720px, 92vh); overflow-y: auto; }
+    .checkout-card { max-height: min(760px, 92vh); overflow-y: auto; }
+    .checkout-summary { margin: 0 0 20px; padding: 14px; border: 1px solid var(--line); border-radius: 4px; background: white; }
+    .checkout-summary h3 { margin: 0 0 10px; font-family: var(--serif); font-size: 20px; font-weight: 400; }
+    .checkout-line, .checkout-total { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; font-size: 12px; }
+    .checkout-total { margin-top: 4px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 14px; font-weight: 700; }
+    .checkout-note { margin: 0 0 16px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+    .payment-options { display: grid; gap: 9px; margin: 0 0 15px; padding: 0; border: 0; }
+    .payment-options legend { margin-bottom: 8px; font-size: 11px; font-weight: 600; }
+    .payment-option { display: flex; align-items: start; gap: 10px; padding: 12px; border: 1px solid var(--line); border-radius: 4px; background: white; cursor: pointer; }
+    .payment-option:has(input:checked) { border-color: var(--green); box-shadow: 0 0 0 1px var(--green); }
+    .payment-option input { margin: 2px 0 0; accent-color: var(--green); }
+    .payment-option strong, .payment-option small { display: block; }
+    .payment-option strong { font-size: 12px; }
+    .payment-option small { margin-top: 4px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+    .checkout-success { padding: 14px 0 0; text-align: center; }
+    .checkout-success h3 { margin: 0 0 10px; font-family: var(--serif); font-size: 27px; font-weight: 400; }
+    .checkout-success p { margin: 0 0 20px; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .primary-button:disabled { cursor: not-allowed; opacity: .55; transform: none; }
+    .auth-note { margin: 0 0 18px; padding: 11px 12px; color: #55634f; border-radius: 4px; background: #e9eee5; font-size: 11px; line-height: 1.6; }
+    .auth-links { display: flex; justify-content: space-between; gap: 12px; margin-top: 16px; }
+    .quiet-button { padding: 8px 0; color: var(--green); background: transparent; font-size: 11px; font-weight: 600; }
+    .auth-feedback { min-height: 18px; margin: 12px 0 0; color: var(--green); font-size: 12px; line-height: 1.5; }
+    .auth-feedback.error { color: #a53e34; }
+    .profile-email { margin: -8px 0 18px; color: var(--muted); font-size: 12px; }
+    .verification-status { display: flex; align-items: center; gap: 8px; margin: 0 0 18px; font-size: 12px; }
+    .verification-status span { width: 8px; height: 8px; border-radius: 50%; background: #c28c36; }
+    .verification-status.verified span { background: #4e8a57; }
+    #open-account { max-width: 110px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    [hidden] { display: none !important; }
+
+    @media (max-width: 780px) {
+      .site-header { gap: 12px; padding: 15px 20px; }
+      .main-nav { display: none; }
+      .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 13px; }
+      .product-art { aspect-ratio: 4 / 4.5; }
+      .story { grid-template-columns: 1fr; }
+      .story-art { min-height: 220px; }
+      .story-art span { font-size: 86px; }
+      .story-copy { padding: 34px; }
+    }
+    @media (max-width: 480px) {
+      .announcement { font-size: 10px; }
+      .brand { font-size: 27px; }
+      .header-actions { gap: 7px; }
+      .sell-button { min-height: 38px; padding: 0 13px; font-size: 11px; }
+      .icon-button { min-height: 38px; padding: 0 11px; font-size: 12px; }
+      #open-account { max-width: 76px; }
+      .section-heading { align-items: start; flex-direction: column; }
+      .shop-tools { width: 100%; }
+      .search-wrap, .search-input { width: 100%; }
+      main { padding: 45px 19px 65px; }
+      .hero { min-height: 380px; }
+      footer { flex-direction: column; align-items: flex-start; }
+      .form-row { grid-template-columns: 1fr; gap: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="announcement">A little something good is waiting for you · Discover the Buba marketplace</div>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="Buba home">buba.</a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a href="#shop">Shop all</a>
+      <a href="#shop" data-nav-category="Home">Home &amp; living</a>
+      <a href="#shop" data-nav-category="Accessories">Accessories</a>
+      <a href="#sell-story">Our community</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-button" id="open-account">Log in</button>
+      <button class="sell-button" id="open-sell">Start selling</button>
+      <button class="icon-button" id="open-cart" aria-label="Open shopping bag">Bag <span class="cart-count" id="cart-count">0</span></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <p class="eyebrow">Thoughtfully found, ready for you</p>
+      <h1>Good things,<br>found here.</h1>
+      <p>Meet your new favorite marketplace for lovely finds, independent makers, and pieces with a little more meaning.</p>
+      <a class="hero-link" href="#shop">Explore the collection <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+
+  <main>
+    <section id="shop" aria-labelledby="shop-title">
+      <div class="section-heading">
+        <div>
+          <h2 id="shop-title">A few good finds</h2>
+          <p>Little treasures from sellers worth knowing.</p>
+        </div>
+        <div class="shop-tools">
+          <label class="search-wrap">
+            <span aria-hidden="true">⌕</span>
+            <input class="search-input" id="search" type="search" placeholder="Search the collection" aria-label="Search products">
+          </label>
+        </div>
+      </div>
+      <div class="category-list" id="categories" aria-label="Filter by category"></div>
+      <div class="product-grid" id="product-grid" aria-live="polite"></div>
+    </section>
+
+    <section class="story" id="sell-story">
+      <div class="story-art" aria-hidden="true"><span>🪴</span></div>
+      <div class="story-copy">
+        <p class="eyebrow">Made for small sellers</p>
+        <h2>Your good thing could be someone’s new favorite.</h2>
+        <p>Have something lovely to share? Bring your products to Buba and meet people who appreciate the care behind every find.</p>
+        <button class="text-link" id="story-sell">Open your shop <span aria-hidden="true">→</span></button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand" href="#" aria-label="Buba home">buba.</a>
+    <span>Good finds. Good people. © <span id="year"></span> Buba Marketplace</span>
+    <span>Made for finding your kind of thing.</span>
+  </footer>
+  <p class="cart-toast" id="cart-toast" role="status" aria-live="polite" aria-atomic="true"></p>
+
+  <div class="overlay" id="cart-overlay" aria-hidden="true">
+    <aside class="drawer" role="dialog" aria-modal="true" aria-labelledby="cart-title">
+      <div class="drawer-heading">
+        <h2 id="cart-title">Your bag</h2>
+        <button class="close-button" id="close-cart" aria-label="Close shopping bag">×</button>
+      </div>
+      <div class="cart-items" id="cart-items"></div>
+      <div class="cart-footer">
+        <div class="subtotal"><span>Subtotal</span><span id="cart-subtotal">€0.00</span></div>
+        <button class="primary-button" id="checkout">Continue to checkout</button>
+        <p class="cart-note">Items subtotal only. Shipping is arranged with the seller.</p>
+      </div>
+    </aside>
+  </div>
+
+  <div class="modal" id="sell-modal" aria-hidden="true">
+    <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="sell-title">
+      <div class="modal-top">
+        <div>
+          <h2 id="sell-title">List a good thing</h2>
+          <p>Add a product to the Buba marketplace.</p>
+        </div>
+        <button class="close-button" id="close-sell" aria-label="Close listing form">×</button>
+      </div>
+      <p class="auth-note" id="seller-connect-note">Connect a verified Stripe seller account before publishing items or receiving payouts.</p>
+      <div class="form-field">
+        <label for="seller-country">Seller country</label>
+        <select id="seller-country" name="country">
+          <option value="IE">Ireland</option>
+          <option value="NL">Netherlands</option>
+          <option value="BE">Belgium</option>
+          <option value="DE">Germany</option>
+          <option value="FR">France</option>
+          <option value="ES">Spain</option>
+          <option value="IT">Italy</option>
+          <option value="PT">Portugal</option>
+          <option value="AT">Austria</option>
+        </select>
+      </div>
+      <p class="form-error" id="seller-connect-error" role="alert"></p>
+      <button class="primary-button" id="connect-seller" type="button">Connect seller payouts</button>
+      <form id="sell-form">
+        <div class="form-field">
+          <label for="item-name">Product name</label>
+          <input id="item-name" name="name" maxlength="60" required placeholder="e.g. Handmade ceramic mug">
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="item-price">Price (EUR)</label>
+            <input id="item-price" name="price" type="number" min="0.01" max="99999" step="0.01" required placeholder="24.00">
+          </div>
+          <div class="form-field">
+            <label for="item-category">Category</label>
+            <select id="item-category" name="category" required>
+              <option value="Home">Home</option>
+              <option value="Accessories">Accessories</option>
+              <option value="Art">Art</option>
+              <option value="Clothing">Clothing</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+        <p class="form-error" id="form-error" role="alert"></p>
+        <button class="primary-button" type="submit">Add to marketplace</button>
+      </form>
+    </section>
+  </div>
+
+  <div class="modal" id="auth-modal" aria-hidden="true">
+    <section class="modal-card auth-card" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+      <div class="modal-top">
+        <div>
+          <h2 id="auth-title">Welcome back</h2>
+          <p id="auth-subtitle">Log in to your Buba account.</p>
+        </div>
+        <button class="close-button" id="close-auth" aria-label="Close account dialog">×</button>
+      </div>
+      <p class="auth-note">Sign-in and email verification are provided by Supabase. Run Buba at http://localhost:4242 with Supabase configured; opening this HTML file directly will not enable accounts. Your password is sent directly to Supabase Auth and is never stored by this Buba server.</p>
+
+      <form id="login-form" data-auth-view="login">
+        <div class="form-field">
+          <label for="login-email">Email address</label>
+          <input id="login-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+        </div>
+        <div class="form-field">
+          <label for="login-password">Password</label>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters">
+        </div>
+        <p class="form-error" id="login-error" role="alert"></p>
+        <button class="primary-button" type="submit">Log in</button>
+        <div class="auth-links">
+          <button class="quiet-button" type="button" data-auth-go="reset">Forgot password?</button>
+          <button class="quiet-button" type="button" data-auth-go="signup">Create account</button>
+        </div>
+      </form>
+
+      <form id="signup-form" data-auth-view="signup" hidden>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="signup-first-name">First name</label>
+            <input id="signup-first-name" name="firstName" autocomplete="given-name" maxlength="50" required placeholder="First name">
+          </div>
+          <div class="form-field">
+            <label for="signup-last-name">Last name</label>
+            <input id="signup-last-name" name="lastName" autocomplete="family-name" maxlength="50" required placeholder="Last name">
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="signup-email">Email address</label>
+          <input id="signup-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+        </div>
+        <div class="form-field">
+          <label for="signup-address">Delivery address</label>
+          <input id="signup-address" name="address" autocomplete="street-address" maxlength="160" required placeholder="Street and house number">
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="signup-city">Town / city</label>
+            <input id="signup-city" name="city" autocomplete="address-level2" maxlength="80" required placeholder="Town or city">
+          </div>
+          <div class="form-field">
+            <label for="signup-postal">Postcode</label>
+            <input id="signup-postal" name="postal" autocomplete="postal-code" maxlength="20" required placeholder="Postcode">
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="signup-country">Country</label>
+          <select id="signup-country" name="country" required>
+            <option value="IE">Ireland</option>
+            <option value="NL">Netherlands</option>
+            <option value="BE">Belgium</option>
+            <option value="DE">Germany</option>
+            <option value="FR">France</option>
+            <option value="ES">Spain</option>
+            <option value="IT">Italy</option>
+            <option value="PT">Portugal</option>
+            <option value="AT">Austria</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="signup-password">Create a password</label>
+          <input id="signup-password" name="password" type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters">
+        </div>
+        <div class="form-field">
+          <label for="signup-password-confirm">Re-enter password</label>
+          <input id="signup-password-confirm" name="passwordConfirm" type="password" autocomplete="new-password" minlength="8" required placeholder="Re-enter your password">
+        </div>
+        <p class="form-error" id="signup-error" role="alert"></p>
+        <button class="primary-button" type="submit">Create account</button>
+        <div class="auth-links">
+          <span></span>
+          <button class="quiet-button" type="button" data-auth-go="login">Already have an account? Log in</button>
+        </div>
+      </form>
+
+      <section data-auth-view="verify" hidden>
+        <p>Confirm your email to finish setting up your account.</p>
+        <p class="profile-email" id="verify-email"></p>
+        <button class="primary-button" id="verify-button" type="button">Resend verification email</button>
+        <div class="auth-links">
+          <span></span>
+          <button class="quiet-button" type="button" data-auth-go="signup">Back to sign up</button>
+        </div>
+      </section>
+
+      <form id="reset-form" data-auth-view="reset" hidden>
+        <p>Enter your email and Supabase will send a secure password reset link.</p>
+        <div class="form-field">
+          <label for="reset-email">Email address</label>
+          <input id="reset-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+        </div>
+        <p class="form-error" id="reset-error" role="alert"></p>
+        <button class="primary-button" type="submit">Request reset link</button>
+        <div class="auth-links">
+          <span></span>
+          <button class="quiet-button" type="button" data-auth-go="login">Back to log in</button>
+        </div>
+      </form>
+
+      <form id="password-update-form" data-auth-view="password-update" hidden>
+        <div class="form-field">
+          <label for="new-password">New password</label>
+          <input id="new-password" name="password" type="password" autocomplete="new-password" minlength="8" required placeholder="At least 8 characters">
+        </div>
+        <div class="form-field">
+          <label for="new-password-confirm">Re-enter new password</label>
+          <input id="new-password-confirm" name="passwordConfirm" type="password" autocomplete="new-password" minlength="8" required placeholder="Re-enter your password">
+        </div>
+        <p class="form-error" id="password-update-error" role="alert"></p>
+        <button class="primary-button" type="submit">Update password</button>
+      </form>
+
+      <section data-auth-view="profile" hidden>
+        <p id="profile-name"></p>
+        <p class="profile-email" id="profile-email"></p>
+        <p class="profile-email" id="profile-address"></p>
+        <p class="verification-status" id="profile-verification"><span></span><span id="profile-verification-text"></span></p>
+        <button class="quiet-button" id="profile-verify-button" type="button" hidden>Resend verification email</button>
+        <button class="primary-button" id="logout-button" type="button">Log out</button>
+      </section>
+      <p class="auth-feedback" id="auth-feedback" role="status" aria-live="polite"></p>
+    </section>
+  </div>
+
+  <div class="modal" id="checkout-modal" aria-hidden="true">
+    <section class="modal-card checkout-card" role="dialog" aria-modal="true" aria-labelledby="checkout-title">
+      <div class="modal-top">
+        <div>
+          <h2 id="checkout-title">Checkout</h2>
+          <p>Delivery details for your Buba order.</p>
+        </div>
+        <button class="close-button" id="close-checkout" aria-label="Close checkout">×</button>
+      </div>
+      <div id="checkout-content">
+        <div class="checkout-summary" id="checkout-summary"></div>
+        <p class="checkout-note">Payments are securely processed by Stripe Checkout. Available methods depend on your country and Stripe account configuration. Card and wallet details are entered only on Stripe’s checkout page. Shipping costs are not included in this items subtotal and must be arranged with the seller.</p>
+        <form id="checkout-form">
+          <fieldset class="payment-options">
+            <legend>Choose a payment method</legend>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="card" required>
+              <span><strong>Card or digital wallet</strong><small>Cards; Apple Pay / Google Pay appear when supported by Stripe and your device</small></span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="bank" required>
+              <span><strong>EU bank transfer</strong><small>Stripe customer-balance bank transfer where available</small></span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="ideal" required>
+              <span><strong>iDEAL</strong><small>Netherlands bank payment</small></span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="bancontact" required>
+              <span><strong>Bancontact</strong><small>Belgium bank payment</small></span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="paymentMethod" value="sepa" required>
+              <span><strong>SEPA Direct Debit</strong><small>Euro bank debit via Stripe Checkout</small></span>
+            </label>
+          </fieldset>
+          <p class="form-error" id="checkout-error" role="alert"></p>
+          <button class="primary-button" type="submit">Continue to secure payment</button>
+        </form>
+      </div>
+      <div class="checkout-success" id="checkout-success" hidden>
+        <h3 id="checkout-result-title">Order status</h3>
+        <p id="checkout-success-message"></p>
+        <button class="primary-button" id="checkout-done" type="button">Continue shopping</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    let products = [];
+    const savedCart = readStorage("buba-cart");
+    const cart = savedCart && typeof savedCart === "object" && !Array.isArray(savedCart) ? savedCart : {};
+    let activeCategory = "All";
+
+    const productGrid = document.getElementById("product-grid");
+    const categoryList = document.getElementById("categories");
+    const searchInput = document.getElementById("search");
+    const cartOverlay = document.getElementById("cart-overlay");
+    const sellModal = document.getElementById("sell-modal");
+    const authModal = document.getElementById("auth-modal");
+    const checkoutModal = document.getElementById("checkout-modal");
+    const countryNames = new Intl.DisplayNames(["en"], { type: "region" });
+    let supabaseClient = null;
+    let accessToken = null;
+    let sellerConnected = false;
+    let signedInUser = null;
+    let cartToastTimeout = null;
+
+    function readStorage(key) {
+      try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : null;
+      } catch (error) {
+        console.error(`Unable to load ${key} from local storage.`, error);
+        return null;
+      }
+    }
+
+    function saveStorage(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (error) {
+        console.error(`Unable to save ${key} to local storage.`, error);
+      }
+    }
+
+    function formatPrice(price) {
+      return new Intl.NumberFormat("en-IE", { style: "currency", currency: "EUR" }).format(price);
+    }
+
+    function categoryArt(category) {
+      const art = {
+        Home: ["🪴", "#e6d9d0"],
+        Accessories: ["👜", "#d6dfd1"],
+        Art: ["🎨", "#e4dfc6"],
+        Clothing: ["🧣", "#d8d2e2"],
+        Other: ["✨", "#e7e4da"]
+      };
+      return art[category] || art.Other;
+    }
+
+    async function apiRequest(url, options = {}) {
+      const headers = new Headers(options.headers || {});
+      if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
+      if (options.body) headers.set("Content-Type", "application/json");
+      const response = await fetch(url, { ...options, headers });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "The request could not be completed.");
+      return result;
+    }
+
+    async function loadProducts() {
+      try {
+        const result = await apiRequest("/api/products");
+        products = result.products.map(product => {
+          const [emoji, color] = categoryArt(product.category);
+          return { ...product, emoji, color, badge: "Seller listed" };
+        });
+        const available = new Set(products.map(product => product.id));
+        Object.keys(cart).forEach(productId => {
+          if (!available.has(productId)) delete cart[productId];
+          else {
+            const quantity = Number(cart[productId]);
+            if (!Number.isInteger(quantity) || quantity < 1) delete cart[productId];
+            else cart[productId] = Math.min(quantity, 20);
+          }
+        });
+        saveStorage("buba-cart", cart);
+        renderCategories();
+        renderProducts();
+        renderCart();
+      } catch (error) {
+        console.error("Unable to load marketplace products.", error);
+        productGrid.replaceChildren(makeElement("p", "empty-state", error.message));
+      }
+    }
+
+    function makeElement(tag, className, text) {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      if (text !== undefined) element.textContent = text;
+      return element;
+    }
+
+    function renderCategories() {
+      categoryList.replaceChildren();
+      const availableCategories = ["All", ...new Set(products.map(product => product.category))];
+      availableCategories.forEach(category => {
+        const button = makeElement("button", `category-button${activeCategory === category ? " active" : ""}`, category);
+        button.type = "button";
+        button.setAttribute("aria-pressed", String(activeCategory === category));
+        button.addEventListener("click", () => {
+          activeCategory = category;
+          renderCategories();
+          renderProducts();
+        });
+        categoryList.append(button);
+      });
+    }
+
+    function renderProducts() {
+      const query = searchInput.value.trim().toLowerCase();
+      const filtered = products.filter(product => {
+        const matchesCategory = activeCategory === "All" || product.category === activeCategory;
+        const matchesSearch = `${product.name} ${product.category} ${product.seller}`.toLowerCase().includes(query);
+        return matchesCategory && matchesSearch;
+      });
+      productGrid.replaceChildren();
+      if (filtered.length === 0) {
+        productGrid.append(makeElement(
+          "p",
+          "empty-state",
+          products.length ? "No finds match that search. Try another word or category." : "No products are listed yet. Sign up as a seller to add the first good find."
+        ));
+        return;
+      }
+
+      filtered.forEach(product => {
+        const card = makeElement("article", "product-card");
+        const art = makeElement("div", "product-art");
+        art.style.setProperty("--art-bg", product.color || "#e7e4da");
+        art.append(makeElement("span", "product-emoji", product.emoji || "✨"));
+        art.firstChild.setAttribute("aria-hidden", "true");
+        art.append(makeElement("span", "product-badge", product.badge || product.category));
+        const add = makeElement("button", "add-button", "+");
+        add.type = "button";
+        add.setAttribute("aria-label", `Add ${product.name} to bag`);
+        add.addEventListener("click", () => addToCart(product.id));
+        art.append(add);
+
+        const info = makeElement("div", "product-info");
+        const details = makeElement("div");
+        details.append(makeElement("h3", "product-name", product.name));
+        details.append(makeElement("p", "product-seller", product.seller));
+        info.append(details, makeElement("span", "product-price", formatPrice(product.price)));
+        card.append(art, info);
+        productGrid.append(card);
+      });
+    }
+
+    function addToCart(productId) {
+      const product = products.find(item => item.id === productId);
+      if (!product) return;
+      const hasAnotherSeller = Object.keys(cart).some(id =>
+        Number(cart[id]) > 0 && products.find(item => item.id === id)?.sellerId !== product.sellerId
+      );
+      if (hasAnotherSeller) {
+        showCartToast("Checkout is limited to one seller at a time. Remove the other seller’s items from your bag first.");
+        return;
+      }
+      const quantity = Number(cart[productId]) || 0;
+      if (quantity >= 20) {
+        showCartToast("You can add up to 20 of each item.");
+        return;
+      }
+      cart[productId] = quantity + 1;
+      saveStorage("buba-cart", cart);
+      renderCart();
+      showCartToast(`${product.name} added to your bag.`);
+    }
+
+    function changeQuantity(productId, change) {
+      const quantity = Number(cart[productId]) || 0;
+      if (change > 0 && quantity >= 20) {
+        showCartToast("You can add up to 20 of each item.");
+        return;
+      }
+      cart[productId] = quantity + change;
+      if (cart[productId] <= 0) delete cart[productId];
+      saveStorage("buba-cart", cart);
+      renderCart();
+    }
+
+    function showCartToast(message) {
+      const toast = document.getElementById("cart-toast");
+      toast.textContent = message;
+      toast.classList.add("visible");
+      clearTimeout(cartToastTimeout);
+      cartToastTimeout = setTimeout(() => toast.classList.remove("visible"), 2800);
+    }
+
+    function renderCart() {
+      const cartItems = document.getElementById("cart-items");
+      const entries = products.filter(product => Number(cart[product.id]) > 0);
+      const count = entries.reduce((total, product) => total + Number(cart[product.id]), 0);
+      document.getElementById("cart-count").textContent = count;
+      document.getElementById("checkout").disabled = entries.length === 0;
+      cartItems.replaceChildren();
+      let subtotal = 0;
+
+      if (entries.length === 0) {
+        cartItems.append(makeElement("p", "cart-empty", "Your bag is waiting for a good find."));
+      }
+
+      entries.forEach(product => {
+        const quantity = Number(cart[product.id]);
+        subtotal += product.price * quantity;
+        const item = makeElement("div", "cart-item");
+        const art = makeElement("div", "cart-item-art", product.emoji || "✨");
+        art.style.setProperty("--art-bg", product.color || "#e7e4da");
+        art.setAttribute("aria-hidden", "true");
+        const details = makeElement("div");
+        details.append(makeElement("p", "cart-item-name", product.name));
+        details.append(makeElement("p", "cart-item-price", formatPrice(product.price)));
+        const controls = makeElement("div", "quantity-control");
+        const minus = makeElement("button", "", "−");
+        minus.type = "button";
+        minus.setAttribute("aria-label", `Remove one ${product.name}`);
+        minus.addEventListener("click", () => changeQuantity(product.id, -1));
+        controls.append(minus, makeElement("span", "", String(quantity)));
+        const plus = makeElement("button", "", "+");
+        plus.type = "button";
+        plus.setAttribute("aria-label", `Add one ${product.name}`);
+        plus.disabled = quantity >= 20;
+        plus.addEventListener("click", () => changeQuantity(product.id, 1));
+        controls.append(plus);
+        details.append(controls);
+        item.append(art, details, makeElement("strong", "", formatPrice(product.price * quantity)));
+        cartItems.append(item);
+      });
+      document.getElementById("cart-subtotal").textContent = formatPrice(subtotal);
+    }
+
+    function renderCheckoutSummary() {
+      const summary = document.getElementById("checkout-summary");
+      const entries = products.filter(product => Number(cart[product.id]) > 0);
+      const subtotal = entries.reduce((total, product) => total + product.price * Number(cart[product.id]), 0);
+      summary.replaceChildren(makeElement("h3", "", "Order summary"));
+      entries.forEach(product => {
+        const quantity = Number(cart[product.id]);
+        summary.append(makeElement(
+          "div",
+          "checkout-line",
+          `${product.name} × ${quantity}`
+        ));
+        summary.lastChild.append(makeElement("span", "", formatPrice(product.price * quantity)));
+      });
+      const total = makeElement("div", "checkout-total");
+      total.append(makeElement("span", "", "Items subtotal"), makeElement("span", "", formatPrice(subtotal)));
+      summary.append(total);
+    }
+
+    function showLayer(layer) {
+      layer.returnFocus = document.activeElement;
+      layer.classList.add("open");
+      layer.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function hideLayer(layer) {
+      if (layer.contains(document.activeElement) && layer.returnFocus instanceof HTMLElement) {
+        layer.returnFocus.focus();
+      }
+      layer.classList.remove("open");
+      layer.setAttribute("aria-hidden", "true");
+      if (!document.querySelector(".overlay.open, .modal.open")) document.body.style.overflow = "";
+    }
+
+    function setAuthView(view) {
+      document.querySelectorAll("[data-auth-view]").forEach(panel => {
+        panel.hidden = panel.dataset.authView !== view;
+      });
+      const copy = {
+        login: ["Welcome back", "Log in to your Buba account."],
+        signup: ["Join Buba", "Create an account to keep your good finds together."],
+        verify: ["Check your email", "Confirm your address to complete account setup."],
+        reset: ["Reset password", "Request a password reset for your account."],
+        "password-update": ["Choose a new password", "Set a new password for your Buba account."],
+        profile: ["Your account", "Your Buba profile."]
+      }[view];
+      document.getElementById("auth-title").textContent = copy[0];
+      document.getElementById("auth-subtitle").textContent = copy[1];
+      document.getElementById("auth-feedback").textContent = "";
+      document.getElementById("auth-feedback").classList.remove("error");
+    }
+
+    function renderProfile() {
+      const user = signedInUser;
+      const metadata = user?.user_metadata || {};
+      const name = metadata.full_name || user?.email?.split("@")[0] || "";
+      const verified = Boolean(user?.email_confirmed_at);
+      document.getElementById("open-account").textContent = user ? name : "Log in";
+      document.getElementById("profile-name").textContent = user ? `Hello, ${name}` : "";
+      document.getElementById("profile-email").textContent = user ? user.email : "";
+      document.getElementById("profile-address").textContent = user
+        ? [metadata.delivery_address, metadata.city, metadata.postal_code, countryNames.of(metadata.country || "IE")].filter(Boolean).join(", ")
+        : "";
+      const verification = document.getElementById("profile-verification");
+      verification.classList.toggle("verified", verified);
+      document.getElementById("profile-verification-text").textContent =
+        verified ? "Email verified" : "Email not verified";
+      document.getElementById("profile-verify-button").hidden = !user || verified;
+    }
+
+    function openAccount() {
+      renderProfile();
+      setAuthView(signedInUser ? "profile" : "login");
+      showLayer(authModal);
+      if (!supabaseClient) showAuthFeedback("Authentication is not configured. Set up the Supabase project and server environment first.", true);
+    }
+
+    function showAuthFeedback(message, isError) {
+      const feedback = document.getElementById("auth-feedback");
+      feedback.textContent = message;
+      feedback.classList.toggle("error", Boolean(isError));
+    }
+
+    async function handleProviderReturn() {
+      const url = new URL(window.location.href);
+      const checkoutState = url.searchParams.get("checkout");
+      const sessionId = url.searchParams.get("session_id");
+      const sellerState = url.searchParams.get("seller");
+      if (!checkoutState && !sellerState) return;
+      url.searchParams.delete("checkout");
+      url.searchParams.delete("session_id");
+      url.searchParams.delete("seller");
+      window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+
+      if (sellerState) {
+        if (!signedInUser) {
+          openAccount();
+          showAuthFeedback("Sign in again to check your Stripe seller onboarding status.", true);
+          return;
+        }
+        await openSellForm();
+        if (sellerState === "return" && sellerConnected) {
+          document.getElementById("seller-connect-note").textContent = "Stripe seller onboarding is complete. You can publish products.";
+        } else if (sellerState === "return") {
+          document.getElementById("seller-connect-error").textContent =
+            "Stripe has not finished enabling payouts yet. Complete any remaining onboarding steps and try again.";
+        }
+        return;
+      }
+
+      showLayer(checkoutModal);
+      document.getElementById("checkout-content").hidden = true;
+      document.getElementById("checkout-success").hidden = false;
+      const title = document.getElementById("checkout-result-title");
+      const message = document.getElementById("checkout-success-message");
+      if (checkoutState === "cancelled") {
+        title.textContent = "Checkout cancelled";
+        message.textContent = "No payment was taken. Your bag is unchanged; close this window to try another payment method.";
+        return;
+      }
+      if (!sessionId || !signedInUser || !accessToken) {
+        title.textContent = "Sign in to check payment";
+        message.textContent = "Your payment status can only be checked after signing into the account used for checkout. Your bag has not been cleared.";
+        return;
+      }
+      try {
+        const status = await apiRequest(`/api/checkout-status?session_id=${encodeURIComponent(sessionId)}`);
+        if (status.status === "paid") {
+          Object.keys(cart).forEach(productId => delete cart[productId]);
+          saveStorage("buba-cart", cart);
+          renderCart();
+          title.textContent = "Payment confirmed";
+          message.textContent = `Stripe confirmed your payment of ${formatPrice(status.amount)}. Your order is now being prepared by the seller.`;
+        } else {
+          title.textContent = "Payment processing";
+          message.textContent = "Stripe has not confirmed payment yet. Your bag is unchanged. Bank transfer payments may take time to settle.";
+        }
+      } catch (error) {
+        title.textContent = "Unable to confirm payment";
+        message.textContent = `${error.message} Your bag has not been cleared.`;
+      }
+    }
+
+    async function initializeApp() {
+      try {
+        if (window.location.protocol === "file:") {
+          throw new Error("Start Buba with npm run dev and open http://localhost:4242; do not open index.html directly.");
+        }
+        const response = await fetch("/api/config");
+        const config = await response.json().catch(() => ({}));
+        if (!response.ok) {
+          const missing = Array.isArray(config.missing) ? config.missing : [];
+          const detail = missing.length
+            ? `Missing configuration: ${missing.join(", ")}. ${config.help || "Use the values from .env.example."}`
+            : config.help || "Set up the Buba environment before using the storefront.";
+          throw new Error(`${config.error || "The server is not configured."} ${detail}`);
+        }
+        if (!window.supabase?.createClient) throw new Error("Supabase Auth could not be loaded.");
+        supabaseClient = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey, {
+          auth: { flowType: "pkce", detectSessionInUrl: true, persistSession: true }
+        });
+        const { data, error } = await supabaseClient.auth.getSession();
+        if (error) throw error;
+        setSignedInUser(data.session?.user || null, data.session?.access_token || null);
+        supabaseClient.auth.onAuthStateChange((event, session) => {
+          setSignedInUser(session?.user || null, session?.access_token || null);
+          if (event === "PASSWORD_RECOVERY") {
+            setAuthView("password-update");
+            showLayer(authModal);
+          }
+        });
+        await loadProducts();
+        if (data.session && data.session.user.email_confirmed_at && data.session.access_token) {
+          try {
+            await handleProviderReturn();
+          } catch (error) {
+            console.error("Unable to complete the provider return flow.", error);
+            showAuthFeedback(error.message, true);
+          }
+        } else if (new URLSearchParams(window.location.search).has("checkout")) {
+          await handleProviderReturn();
+        }
+        const params = new URLSearchParams(window.location.search);
+        if (params.has("seller")) await handleProviderReturn();
+      } catch (error) {
+        console.error("Buba setup failed.", error);
+        productGrid.replaceChildren(makeElement("p", "empty-state", `Store setup error: ${error.message}`));
+      }
+    }
+
+    function setSignedInUser(user, token = null) {
+      signedInUser = user;
+      accessToken = token;
+      renderProfile();
+    }
+
+    async function resendVerification(email) {
+      if (!supabaseClient || !email) {
+        showAuthFeedback("Enter your email address first.", true);
+        return;
+      }
+      const { error } = await supabaseClient.auth.resend({ type: "signup", email });
+      showAuthFeedback(error ? error.message : "A new verification link has been sent to your email.", Boolean(error));
+    }
+
+    async function loadSellerStatus() {
+      if (!signedInUser || !accessToken) return false;
+      const result = await apiRequest("/api/connect/status");
+      sellerConnected = result.connected;
+      if (result.country) document.getElementById("seller-country").value = result.country;
+      document.getElementById("connect-seller").hidden = sellerConnected;
+      document.getElementById("seller-country").disabled = sellerConnected;
+      document.getElementById("sell-form").hidden = !sellerConnected;
+      document.getElementById("seller-connect-note").textContent = sellerConnected
+        ? "Your Stripe seller account is connected and enabled for payments and payouts."
+        : "Complete Stripe's secure seller onboarding to publish products and receive payouts.";
+      return sellerConnected;
+    }
+
+    async function openSellForm() {
+      if (!signedInUser || !signedInUser.email_confirmed_at) {
+        openAccount();
+        setAuthView(signedInUser ? "profile" : "login");
+        showAuthFeedback(
+          signedInUser ? "Verify your email before listing products." : "Sign in and verify your email before listing products.",
+          true
+        );
+        return;
+      }
+      document.getElementById("form-error").textContent = "";
+      document.getElementById("seller-connect-error").textContent = "";
+      document.getElementById("seller-country").value = signedInUser.user_metadata?.country || "IE";
+      document.getElementById("sell-form").hidden = true;
+      showLayer(sellModal);
+      try {
+        await loadSellerStatus();
+      } catch (error) {
+        document.getElementById("seller-connect-error").textContent = error.message;
+      }
+    }
+
+    document.getElementById("open-account").addEventListener("click", openAccount);
+    document.getElementById("close-auth").addEventListener("click", () => hideLayer(authModal));
+    authModal.addEventListener("click", event => {
+      if (event.target === authModal) hideLayer(authModal);
+    });
+    document.querySelectorAll("[data-auth-go]").forEach(button => {
+      button.addEventListener("click", () => setAuthView(button.dataset.authGo));
+    });
+    document.getElementById("signup-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      const firstName = String(formData.get("firstName")).trim();
+      const lastName = String(formData.get("lastName")).trim();
+      const fullName = `${firstName} ${lastName}`.trim();
+      const email = String(formData.get("email")).trim();
+      const address = String(formData.get("address")).trim();
+      const city = String(formData.get("city")).trim();
+      const postal = String(formData.get("postal")).trim();
+      const country = String(formData.get("country"));
+      const password = String(formData.get("password"));
+      const passwordConfirm = String(formData.get("passwordConfirm"));
+      const errorElement = document.getElementById("signup-error");
+      errorElement.textContent = "";
+      if (!supabaseClient) {
+        errorElement.textContent = "Authentication is not configured. Set up the Supabase project and server environment first.";
+        return;
+      }
+      if (!firstName || !lastName || fullName.length > 100 || !email || !address || !city || !postal || !country) {
+        errorElement.textContent = "Enter your first and last name, email, and complete delivery address.";
+        return;
+      }
+      if (password !== passwordConfirm) {
+        errorElement.textContent = "Your passwords do not match. Please re-enter them.";
+        document.getElementById("signup-password-confirm").focus();
+        return;
+      }
+      const submit = form.querySelector('[type="submit"]');
+      submit.disabled = true;
+      const { data, error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            delivery_address: address,
+            city,
+            postal_code: postal,
+            country
+          },
+          emailRedirectTo: window.location.origin
+        }
+      });
+      submit.disabled = false;
+      if (error) {
+        errorElement.textContent = error.message;
+        return;
+      }
+      document.getElementById("verify-email").textContent = email;
+      form.reset();
+      setAuthView(data.session ? "profile" : "verify");
+      showAuthFeedback(
+        data.session ? "Your account is ready." : "Check your inbox for the Supabase verification link.",
+        false
+      );
+    });
+    document.getElementById("verify-button").addEventListener("click", () =>
+      resendVerification(document.getElementById("verify-email").textContent.trim()));
+    document.getElementById("profile-verify-button").addEventListener("click", () => resendVerification(signedInUser?.email));
+    document.getElementById("login-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      const email = String(formData.get("email")).trim();
+      const password = String(formData.get("password"));
+      const errorElement = document.getElementById("login-error");
+      errorElement.textContent = "";
+      if (!supabaseClient) {
+        errorElement.textContent = "Authentication is not configured. Set up the Supabase project and server environment first.";
+        return;
+      }
+      const submit = form.querySelector('[type="submit"]');
+      submit.disabled = true;
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      submit.disabled = false;
+      if (error) {
+        errorElement.textContent = error.message;
+        if (/email not confirmed/i.test(error.message)) {
+          document.getElementById("verify-email").textContent = email;
+          setAuthView("verify");
+        }
+        return;
+      }
+      form.reset();
+      setSignedInUser(data.user, data.session.access_token);
+      setAuthView("profile");
+      showAuthFeedback("You are signed in.", false);
+    });
+    document.getElementById("reset-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const email = String(new FormData(event.currentTarget).get("email")).trim();
+      if (!supabaseClient) {
+        showAuthFeedback("Authentication is not configured. Set up the Supabase project and server environment first.", true);
+        return;
+      }
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin });
+      showAuthFeedback(error ? error.message : "If that address has an account, Supabase will email a secure reset link.", Boolean(error));
+      if (!error) event.currentTarget.reset();
+    });
+    document.getElementById("password-update-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const password = String(data.get("password"));
+      const confirmation = String(data.get("passwordConfirm"));
+      const errorElement = document.getElementById("password-update-error");
+      errorElement.textContent = "";
+      if (password !== confirmation) {
+        errorElement.textContent = "Your passwords do not match.";
+        return;
+      }
+      const { error } = await supabaseClient.auth.updateUser({ password });
+      if (error) {
+        errorElement.textContent = error.message;
+        return;
+      }
+      form.reset();
+      setAuthView("login");
+      showAuthFeedback("Your password has been updated.", false);
+    });
+    document.getElementById("logout-button").addEventListener("click", async () => {
+      const { error } = await supabaseClient.auth.signOut();
+      if (error) {
+        showAuthFeedback(error.message, true);
+        return;
+      }
+      setSignedInUser(null);
+      setAuthView("login");
+      showAuthFeedback("You are signed out.", false);
+    });
+
+    document.getElementById("open-cart").addEventListener("click", () => showLayer(cartOverlay));
+    document.getElementById("close-cart").addEventListener("click", () => hideLayer(cartOverlay));
+    cartOverlay.addEventListener("click", event => {
+      if (event.target === cartOverlay) hideLayer(cartOverlay);
+    });
+    document.getElementById("close-checkout").addEventListener("click", () => hideLayer(checkoutModal));
+    checkoutModal.addEventListener("click", event => {
+      if (event.target === checkoutModal) hideLayer(checkoutModal);
+    });
+    document.getElementById("checkout-done").addEventListener("click", () => {
+      hideLayer(checkoutModal);
+      document.getElementById("shop").scrollIntoView({ behavior: "smooth" });
+    });
+    document.getElementById("open-sell").addEventListener("click", openSellForm);
+    document.getElementById("story-sell").addEventListener("click", openSellForm);
+    document.getElementById("close-sell").addEventListener("click", () => hideLayer(sellModal));
+    sellModal.addEventListener("click", event => {
+      if (event.target === sellModal) hideLayer(sellModal);
+    });
+    document.getElementById("connect-seller").addEventListener("click", async event => {
+      const button = event.currentTarget;
+      const errorElement = document.getElementById("seller-connect-error");
+      errorElement.textContent = "";
+      button.disabled = true;
+      try {
+        const result = await apiRequest("/api/connect/onboarding", {
+          method: "POST",
+          body: JSON.stringify({ country: document.getElementById("seller-country").value })
+        });
+        if (result.connected) {
+          await loadSellerStatus();
+          return;
+        }
+        window.location.assign(result.url);
+      } catch (error) {
+        errorElement.textContent = error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
+    searchInput.addEventListener("input", renderProducts);
+    document.getElementById("checkout").addEventListener("click", () => {
+      if (Object.keys(cart).length === 0) return;
+      if (!signedInUser || !signedInUser.email_confirmed_at) {
+        openAccount();
+        showAuthFeedback(
+          signedInUser ? "Verify your email before checking out." : "Sign in and verify your email to continue to checkout.",
+          true
+        );
+        return;
+      }
+      renderCheckoutSummary();
+      document.getElementById("checkout-form").reset();
+      document.getElementById("checkout-error").textContent = "";
+      document.getElementById("checkout-content").hidden = false;
+      document.getElementById("checkout-success").hidden = true;
+      hideLayer(cartOverlay);
+      showLayer(checkoutModal);
+      checkoutModal.returnFocus = document.getElementById("open-cart");
+      checkoutModal.querySelector('input[name="paymentMethod"]').focus();
+    });
+    document.getElementById("checkout-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      const paymentMethod = String(formData.get("paymentMethod"));
+      if (!paymentMethod) {
+        document.getElementById("checkout-error").textContent = "Choose a payment method to continue.";
+        return;
+      }
+      const submit = form.querySelector('[type="submit"]');
+      const errorElement = document.getElementById("checkout-error");
+      submit.disabled = true;
+      errorElement.textContent = "";
+      try {
+        const result = await apiRequest("/api/checkout-session", {
+          method: "POST",
+          body: JSON.stringify({
+            paymentMethod,
+            items: Object.entries(cart).map(([id, quantity]) => ({ id, quantity: Number(quantity) }))
+          })
+        });
+        window.location.assign(result.url);
+      } catch (error) {
+        errorElement.textContent = error.message;
+        submit.disabled = false;
+      }
+    });
+    document.getElementById("sell-form").addEventListener("submit", async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      const name = String(formData.get("name")).trim();
+      const price = Number(formData.get("price"));
+      if (!name || !Number.isFinite(price) || price <= 0) {
+        document.getElementById("form-error").textContent = "Enter a product name and a valid price.";
+        return;
+      }
+      const category = String(formData.get("category"));
+      const errorElement = document.getElementById("form-error");
+      const submit = form.querySelector('[type="submit"]');
+      submit.disabled = true;
+      errorElement.textContent = "";
+      try {
+        await apiRequest("/api/products", {
+          method: "POST",
+          body: JSON.stringify({ name, category, price })
+        });
+        form.reset();
+        await loadProducts();
+        hideLayer(sellModal);
+        document.getElementById("shop").scrollIntoView({ behavior: "smooth" });
+      } catch (error) {
+        errorElement.textContent = error.message;
+      } finally {
+        submit.disabled = false;
+      }
+    });
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape") {
+        hideLayer(cartOverlay);
+        hideLayer(sellModal);
+        hideLayer(authModal);
+        hideLayer(checkoutModal);
+      }
+    });
+    document.querySelectorAll("[data-nav-category]").forEach(link => {
+      link.addEventListener("click", () => {
+        activeCategory = link.dataset.navCategory;
+        renderCategories();
+        renderProducts();
+      });
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+    renderProfile();
+    renderCategories();
+    renderProducts();
+    renderCart();
+    initializeApp();
+  </script>
+</body>
+</html>
